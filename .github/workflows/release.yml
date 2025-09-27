@@ -1,0 +1,25 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install tools with mise
+        uses: jdx/mise-action@v2
+
+      - name: Build and Package Release Artifacts
+        run: make release
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: target/release/backup-health-monitor-*
+          generate_release_notes: true

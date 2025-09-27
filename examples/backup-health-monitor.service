@@ -1,0 +1,48 @@
+[Unit]
+Description=Backup Health Monitor
+Documentation=https://github.com/backup-health-monitor
+After=network.target dbus.service
+Requires=dbus.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=deploy
+Group=deploy
+
+# Binary and configuration
+ExecStart=/usr/local/bin/backup-health-monitor serve --config /etc/backup-health/config.yaml
+
+# Restart configuration
+Restart=always
+RestartSec=10
+TimeoutStartSec=30
+TimeoutStopSec=30
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+
+# Allow access to systemd D-Bus for service monitoring
+SupplementaryGroups=systemd-journal
+
+# Working directory
+WorkingDirectory=/var/lib/backup-health-monitor
+
+# Environment
+Environment=GIN_MODE=release
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=backup-health-monitor
+
+[Install]
+WantedBy=multi-user.target

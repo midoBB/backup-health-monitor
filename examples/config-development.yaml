@@ -1,0 +1,27 @@
+# Development configuration with verbose logging
+# Suitable for testing and debugging
+
+services:
+  - name: "test-backup.service"
+    backup_path: "/tmp/test-backups"
+    max_age_hours: 1  # Short interval for testing
+    expected_file_patterns: ["test-*.txt", "*.backup"]
+    min_file_size_mb: 0.01  # Very small files for testing
+
+  - name: "mock-service.service"
+    backup_path: "/tmp/mock-backups"
+    max_age_hours: 2
+    expected_file_patterns: ["mock-*.dat"]
+    min_file_size_mb: 0.1
+
+server:
+  port: 3000  # Non-standard port for development
+  bind_address: "127.0.0.1"
+
+logging:
+  level: "debug"  # Verbose logging for development
+  format: "text"  # Human-readable format
+
+monitoring:
+  check_interval_seconds: 10  # Frequent checks for testing
+  metrics_enabled: true

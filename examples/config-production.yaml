@@ -1,0 +1,39 @@
+# Production configuration with comprehensive monitoring
+# Multiple services with detailed validation
+
+services:
+  - name: "vault-backup.service"
+    backup_path: "/opt/backups/vault"
+    max_age_hours: 36
+    expected_file_patterns: ["vault-backup-*.tar.gz", "*.vault"]
+    min_file_size_mb: 5
+
+  - name: "postgres-backup.service"
+    backup_path: "/opt/backups/postgres"
+    max_age_hours: 24
+    expected_file_patterns: ["*.sql.gz", "*-dump.sql"]
+    min_file_size_mb: 10
+
+  - name: "minio-backup.service"
+    backup_path: "/opt/backups/minio"
+    max_age_hours: 48
+    expected_file_patterns: ["minio-*.tar.gz", "*.backup"]
+    min_file_size_mb: 50
+
+  - name: "redis-backup.service"
+    backup_path: "/opt/backups/redis"
+    max_age_hours: 12
+    expected_file_patterns: ["redis-*.rdb", "*.aof"]
+    min_file_size_mb: 1
+
+server:
+  port: 8080
+  bind_address: "0.0.0.0"  # Listen on all interfaces for production
+
+logging:
+  level: "info"
+  format: "json"  # Structured logging for production
+
+monitoring:
+  check_interval_seconds: 30  # More frequent checks in production
+  metrics_enabled: true

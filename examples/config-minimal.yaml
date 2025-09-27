@@ -1,0 +1,21 @@
+# Minimal configuration for basic backup monitoring
+# Single service monitoring with defaults
+
+services:
+  - name: "postgres-backup.service"
+    backup_path: "/opt/backups/postgres"
+    max_age_hours: 24
+    expected_file_patterns: ["*.sql.gz"]
+    min_file_size_mb: 1
+
+server:
+  port: 8080
+  bind_address: "127.0.0.1"
+
+logging:
+  level: "info"
+  format: "text"
+
+monitoring:
+  check_interval_seconds: 60
+  metrics_enabled: true
